@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import "./App.css";
-import BackgroundImage from "./assets/images/Background.jpg";
 import SearchBar from "./components/SearchBar";
+import BackgroundImage from "./assets/images/Background.jpg";
 import Card from "./components/Card";
+import "./index.css";
 function App() {
   const [location, setLocation] = useState("London");
   const [condition, setCondition] = useState("");
@@ -33,11 +33,18 @@ function App() {
   };
 
   useEffect(() => {
-    console.log(BackgroundImage);
     getWeatherData().then((data) => parseWeatherData(data));
   }, []);
   return (
-    <div className="flex-col 100 h-full">
+    <div
+      className="flex-col 100 h-full"
+      style={{
+        backgroundImage: `url(${BackgroundImage})`,
+        backgroundSize: "cover",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      Test
       <SearchBar
         getWeatherData={getWeatherData}
         parseWeatherData={parseWeatherData}
