@@ -1,35 +1,57 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
-
+import { useEffect, useState } from "react";
+import "./App.css";
+import BackgroundImage from "./assets/images/Background.jpg";
+import SearchBar from "./components/SearchBar";
+import Card from "./components/Card";
 function App() {
-  const [count, setCount] = useState(0)
+  const [location, setLocation] = useState("London");
+  const [condition, setCondition] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const [humidity, setHumidity] = useState("");
+  const [cloud, setCloud] = useState("");
+  const [feelsLike, setFeelsLike] = useState("");
+  const getWeatherData = async (city = "london") => {
+    try {
+      const data = await fetch(
+        `https://api.weatherapi.com/v1/current.json?key=3998eb0364a3400585253459232206&q=${city}`,
+        { mode: "cors" }
+      ).then((response) => response.json());
+      console.log(data);
+      return data;
+    } catch (error) {
+      // generate error message
+    }
+  };
+  const parseWeatherData = async (data) => {
+    console.log(data);
+    setCondition(data.current.condition.text);
+    setCloud(data.current.cloud);
+    setFeelsLike(data.current.feelslike_c);
+    setHumidity(data.current.humidity);
+    setTemperature(data.current.temp_c);
+    setLocation(data.location.name);
+  };
 
+  useEffect(() => {
+    console.log(BackgroundImage);
+    getWeatherData().then((data) => parseWeatherData(data));
+  }, []);
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="flex-col 100 h-full">
+      <SearchBar
+        getWeatherData={getWeatherData}
+        parseWeatherData={parseWeatherData}
+      ></SearchBar>
+      <Card
+        location={location}
+        condition={condition}
+        temperature={temperature}
+        humidity={humidity}
+        cloud={cloud}
+        feelsLike={feelsLike}
+      ></Card>
+    </div>
+  );
 }
 
-export default App
+export default App;
