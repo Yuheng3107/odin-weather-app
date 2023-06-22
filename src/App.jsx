@@ -44,7 +44,6 @@ function App() {
         backgroundRepeat: "no-repeat",
       }}
     >
-      Test
       <SearchBar
         getWeatherData={getWeatherData}
         parseWeatherData={parseWeatherData}
